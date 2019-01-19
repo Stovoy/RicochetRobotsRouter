@@ -21,7 +21,7 @@ body {
 }
 
 .wall {
-  z-index: 1;
+  z-index: 2;
   width: 48px;
   height: 48px;
   position: absolute;
@@ -50,14 +50,14 @@ body {
 }
 
 .wall-solid {
-  z-index: 1;
+  z-index: 2;
   width: 48px;
   height: 48px;
   background-color: rgb(50, 50, 50);
 }
 
 .corner {
-  z-index: 1;
+  z-index: 2;
   width: 48px;
   height: 48px;
   position: absolute;
@@ -94,7 +94,6 @@ body {
   display: inline-block;
   background-repeat: no-repeat;
   background-size: 38px 38px;
-  filter: brightness(0.3) sepia(1) saturate(2500%);
 }
 
 .shape-star {
@@ -133,7 +132,25 @@ body {
 .shape-backslash {
   @extend .shape;
   background-image: url("./assets/bouncer.png");
+}
 
+.robot {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  display: inline-block;
+  background-image: url("./assets/robot.png");
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.robot-before {
+  @extend .robot;
+  opacity: 0.5;
+}
+
+.robot-after {
+  @extend .robot;
 }
 
 .color-blue {
@@ -154,4 +171,20 @@ body {
 
 .color-any {
 
+}
+
+.solve-button {
+
+}
+
+.solution {
+
+}
+
+.solution-step {
+  background-color: white;
+}
+
+.solution-step.selected {
+  background-color: lightblue;
 }

@@ -24,6 +24,9 @@ function solve(spaces, robots, destinations) {
     const queue = [position];
     while (queue.length > 0) {
         const position = queue.shift();
+        if (position.moveCount > 50) {
+            return null;
+        }
         const robots = position.robots;
         for (let robotIndex = 0; robotIndex < robots.length; robotIndex++) {
             const robot = robots[robotIndex];
@@ -90,7 +93,12 @@ function getPositionKey(robots) {
 function extractMoves(position) {
     const moves = [];
     while (position.parent !== null) {
-        moves.unshift({direction: position.moveDirection, robot: position.parent.robots[position.moveRobot]});
+        moves.unshift({
+            direction: position.moveDirection,
+            before: position.parent.robots[position.moveRobot],
+            after: position.robots[position.moveRobot],
+            robots: position.robots,
+        });
         position = position.parent;
     }
     return moves;
