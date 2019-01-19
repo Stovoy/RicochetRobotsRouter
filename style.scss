@@ -1,0 +1,55 @@
+body {
+  background-color: rgb(18, 20, 21);
+}
+.board {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.board-row {
+  white-space: nowrap;
+  height: 48px;
+}
+
+.space {
+  text-align: left;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  background-color: rgb(220, 200, 190);
+}
+
+.wall {
+  border-width: 20px;
+  border-color: black;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  display: inline-block;
+}
+
+.wall-west {
+  @extend .wall;
+  border-left: solid;
+}
+
+.wall-north {
+  @extend .wall;
+  border-top: solid;
+}
+
+.wall-east {
+  @extend .wall;
+  border-right: solid;
+}
+
+.wall-south {
+  @extend .wall;
+  border-bottom: solid;
+}
+
+.wall-solid {
+  width: 48px;
+  height: 48px;
+  background-color: black;
+}
