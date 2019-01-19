@@ -1,4 +1,5 @@
 import {render} from "./renderer";
+import {solve} from "./solver";
 
 class Space {
     constructor(properties) {
@@ -29,6 +30,19 @@ class Space {
                 this.shape = property.shape;
                 this.color = property.color;
             }
+        }
+    }
+
+    canGo(direction) {
+        switch (direction) {
+            case "west":
+                return this.west && !this.westWall;
+            case "north":
+                return this.north && !this.northWall;
+            case "east":
+                return this.east && !this.eastWall;
+            case "south":
+                return this.south && !this.southWall;
         }
     }
 }
@@ -68,7 +82,10 @@ function parseBoard(board) {
     return spaces;
 }
 
-const board = require('../assets/board.json');
+const board = require("../assets/board.json");
 const spaces = parseBoard(board);
 
 render(spaces);
+
+const solution = solve(spaces, [{x: 0, y: 0, color: "green"}], [{x: 9, y: 2, color: "green"}]);
+console.log(solution);

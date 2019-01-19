@@ -16,7 +16,7 @@ body {
   display: inline-block;
   width: 48px;
   height: 48px;
-  background-image: url('./assets/space.png');
+  background-image: url("./assets/space.png");
   background-repeat: no-repeat;
 }
 
@@ -26,7 +26,7 @@ body {
   height: 48px;
   position: absolute;
   display: inline-block;
-  background-image: url('./assets/wall.png');
+  background-image: url("./assets/wall.png");
   background-repeat: no-repeat;
 }
 
@@ -62,7 +62,7 @@ body {
   height: 48px;
   position: absolute;
   display: inline-block;
-  background-image: url('./assets/corner.png');
+  background-image: url("./assets/corner.png");
   background-repeat: no-repeat;
 }
 
@@ -99,40 +99,40 @@ body {
 
 .shape-star {
   @extend .shape;
-  background-image: url('./assets/star.png');
+  background-image: url("./assets/star.png");
 }
 
 .shape-moon {
   @extend .shape;
-  background-image: url('./assets/moon.png');
+  background-image: url("./assets/moon.png");
 }
 
 .shape-saturn {
   @extend .shape;
-  background-image: url('./assets/saturn.png');
+  background-image: url("./assets/saturn.png");
 }
 
 .shape-gear {
   @extend .shape;
-  background-image: url('./assets/gear.png');
+  background-image: url("./assets/gear.png");
 }
 
 .shape-portal {
   @extend .shape;
-  background-image: url('./assets/portal.png');
+  background-image: url("./assets/portal.png");
   filter: none;
 }
 
 .shape-slash {
   @extend .shape;
-  background-image: url('./assets/bouncer.png');
+  background-image: url("./assets/bouncer.png");
   transform: scaleX(-1);
   left: -5px;
 }
 
 .shape-backslash {
   @extend .shape;
-  background-image: url('./assets/bouncer.png');
+  background-image: url("./assets/bouncer.png");
 
 }
 
