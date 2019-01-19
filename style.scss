@@ -124,10 +124,15 @@ body {
 }
 
 .shape-slash {
-
+  @extend .shape;
+  background-image: url('./assets/bouncer.png');
+  transform: scaleX(-1);
+  left: -5px;
 }
 
 .shape-backslash {
+  @extend .shape;
+  background-image: url('./assets/bouncer.png');
 
 }
 
