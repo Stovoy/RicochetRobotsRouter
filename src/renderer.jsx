@@ -42,29 +42,72 @@ class Space extends React.Component {
         const space = this.props.space;
         return (
             <div className='space'>
-                {space.solid ? <Wall solid/> : null}
-                {space.westWall ? <Wall west/> : null}
-                {space.northWall ? <Wall north/> : null}
-                {space.eastWall ? <Wall east/> : null}
-                {space.southWall ? <Wall south/> : null}
+                {space.solid ? <Wall type='solid'/> : null}
+                {space.westWall ? <Wall type='west'/> : null}
+                {space.northWall ? <Wall type='north'/> : null}
+                {space.eastWall ? <Wall type='east'/> : null}
+                {space.southWall ? <Wall type='south'/> : null}
+                {this.northWestCorner() ? <Corner type='north-west'/> : null}
+                {this.northEastCorner() ? <Corner type='north-east'/> : null}
+                {this.southEastCorner() ? <Corner type='south-east'/> : null}
+                {this.southWestCorner() ? <Corner type='south-west'/> : null}
+                {space.shape ? <Shape shape={space.shape} color={space.color}/> : null}
             </div>
         );
+    }
+
+    northWestCorner() {
+        const space = this.props.space;
+        return space.north && space.north.westWall || space.west && space.west.northWall;
+    }
+
+    northEastCorner() {
+        const space = this.props.space;
+        return space.north && space.north.eastWall || space.east && space.east.northWall;
+    }
+
+    southEastCorner() {
+        const space = this.props.space;
+        return space.south && space.south.eastWall || space.east && space.east.southWall;
+    }
+
+    southWestCorner() {
+        const space = this.props.space;
+        return space.south && space.south.westWall || space.west && space.west.southWall;
     }
 }
 
 class Wall extends React.Component {
     render() {
-        if (this.props.west) {
-            return <div className='wall-west'/>;
-        } else if (this.props.north) {
-            return <div className='wall-north'/>;
-        } else if (this.props.east) {
-            return <div className='wall-east'/>;
-        } else if (this.props.south) {
-            return <div className='wall-south'/>;
-        } else if (this.props.solid) {
-            return <div className='wall-solid'/>;
+        return <div className={`wall-${this.props.type}`}/>;
+    }
+}
+
+class Shape extends React.Component {
+    render() {
+        return <div className={`${this.getShapeClass()} ${this.getColorClass()}`}/>
+    }
+
+    getShapeClass() {
+        if (this.props.shape === '/') {
+            return 'shape-slash';
         }
+
+        if (this.props.shape === '\\') {
+            return 'shape-backslash';
+        }
+
+        return `shape-${this.props.shape}`;
+    }
+
+    getColorClass() {
+        return `color-${this.props.color}`;
+    }
+}
+
+class Corner extends React.Component {
+    render() {
+        return <div className={`corner-${this.props.type}`}/>;
     }
 }
 

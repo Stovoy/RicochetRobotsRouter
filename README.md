@@ -22,7 +22,7 @@ Valid properties are:
   
 The target object has two properties:
 
-  `"<shape>"` - One of `"star"`, `"moon"`, `"portal"`, `"saturn"`, `"gear"`, `"\"`, `"/"`
+  `"<shape>"` - One of `"star"`, `"moon"`, `"saturn"`, `"gear"`, `"portal"`, `"\"`, `"/"`
   
   `"<color>"` - One of `"blue"`, `"red"`, `"green"`, `"yellow"`,  `"any"`
 

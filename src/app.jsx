@@ -57,10 +57,10 @@ function parseBoard(board) {
                 spaces[y][x].east = spaces[y][x + 1];
             }
             if (y > 0) {
-                spaces[y][x].south = spaces[y - 1][x];
+                spaces[y][x].north = spaces[y - 1][x];
             }
             if (y < height - 1) {
-                spaces[y][x].north = spaces[y + 1][x];
+                spaces[y][x].south = spaces[y + 1][x];
             }
         }
     }

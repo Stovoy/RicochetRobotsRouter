@@ -108,6 +108,7 @@
       "east"
     ],
     [
+      "north",
       "west",
       {
         "shape": "gear",
@@ -341,7 +342,9 @@
     ],
     [],
     [],
-    [],
+    [
+      "north"
+    ],
     [
       "east"
     ],
@@ -359,6 +362,7 @@
     ],
     [
       "west",
+      "south",
       {
         "shape": "gear",
         "color": "blue"
@@ -499,6 +503,7 @@
     [],
     [],
     [
+      "south",
       "east",
       {
         "shape": "gear",
