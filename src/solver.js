@@ -3,8 +3,9 @@
  * @param spaces A grid of spaces as returned by app.parseBoard()
  * @param robots An array of objects like {x: 0, y: 0, color: "red"}
  * @param destinations An array of objects like [{x: 0, y: 0, "color": "red"}]
+ * @param onMove A function to call as progress is made.
  */
-function solve(spaces, robots, destinations) {
+function solve(spaces, robots, destinations, onMove = null) {
     // Seen will contain the set of all visited positions, based on the robots.
     // Each position is represented by a string like "0,1,2,3", where each robot"s
     // x and y values are concatenated into one string. The robot order is the same
@@ -22,12 +23,24 @@ function solve(spaces, robots, destinations) {
     seen.add(getPositionKey(robots));
 
     const queue = [position];
+    let lastSentMove = 0;
+    const occupiedPositions = new Array(spaces.length * spaces[0].length);
     while (queue.length > 0) {
         const position = queue.shift();
-        if (position.moveCount > 50) {
+        if (position.moveCount > 25) {
             return null;
         }
+
+        if (onMove !== null && position.moveCount > lastSentMove) {
+            onMove(position.moveCount);
+            lastSentMove = position.moveCount;
+        }
+
         const robots = position.robots;
+        for (let robot of robots) {
+            occupiedPositions[robot.y * spaces.length + robot.x] = true;
+        }
+
         for (let robotIndex = 0; robotIndex < robots.length; robotIndex++) {
             const robot = robots[robotIndex];
             for (let destination of destinations) {
@@ -38,42 +51,69 @@ function solve(spaces, robots, destinations) {
                 }
             }
 
-            for (let direction of ["west", "north", "east", "south"]) {
-                let newPosition = moveRobotInDirection(spaces, robots, robotIndex, direction);
-                const positionKey = getPositionKey(newPosition.robots);
-                if (!seen.has(positionKey)) {
-                    newPosition.moveRobot = robotIndex;
-                    newPosition.moveCount = position.moveCount + 1;
-                    newPosition.parent = position;
-                    seen.add(positionKey);
-                    queue.push(newPosition);
+            for (let direction of [0, 1, 2, 3]) {
+                let newPosition = moveRobotInDirection(spaces, robots, robotIndex, direction, occupiedPositions);
+                if (newPosition !== null) {
+                    const positionKey = getPositionKey(newPosition.robots);
+                    if (!seen.has(positionKey)) {
+                        newPosition.moveRobot = robotIndex;
+                        newPosition.moveCount = position.moveCount + 1;
+                        newPosition.parent = position;
+                        seen.add(positionKey);
+                        queue.push(newPosition);
+                    }
                 }
             }
         }
+        for (let robot of robots) {
+            occupiedPositions[robot.y * spaces.length + robot.x] = false;
+        }
     }
+
+    return null;
 }
 
-function moveRobotInDirection(spaces, robots, robotIndex, direction) {
+function moveRobotInDirection(spaces, robots, robotIndex, direction, occupiedPositions) {
     const newRobots = robots.map(r => Object.assign({}, r));
     const robot = newRobots[robotIndex];
 
     let space = spaces[robot.y][robot.x];
-    while (space.canGo(direction) && !robotInDirection(robot, direction, robots)) {
-        switch (direction) {
-            case "west":
+    let moved = false;
+
+    // Critical code path... extracted branches out of loop.
+    switch (direction) {
+        case 0:
+            while (!space.westWall && space.west && !occupiedPositions[robot.y * spaces.length + robot.x - 1]) {
                 robot.x -= 1;
-                break;
-            case "north":
+                space = spaces[robot.y][robot.x];
+                moved = true;
+            }
+            break;
+        case 1:
+            while (!space.northWall && space.north && !occupiedPositions[(robot.y - 1) * spaces.length + robot.x]) {
                 robot.y -= 1;
-                break;
-            case "east":
+                space = spaces[robot.y][robot.x];
+                moved = true;
+            }
+            break;
+        case 2:
+            while (!space.eastWall && space.east && !occupiedPositions[robot.y * spaces.length + robot.x + 1]) {
                 robot.x += 1;
-                break;
-            case "south":
+                space = spaces[robot.y][robot.x];
+                moved = true;
+            }
+            break;
+        case 3:
+            while (!space.southWall && space.south && !occupiedPositions[(robot.y + 1) * spaces.length + robot.x]) {
                 robot.y += 1;
-                break;
-        }
-        space = spaces[robot.y][robot.x];
+                space = spaces[robot.y][robot.x];
+                moved = true;
+            }
+            break;
+    }
+
+    if (!moved) {
+        return null;
     }
 
     return {
@@ -107,16 +147,16 @@ function extractMoves(position) {
 function robotInDirection(robot, direction, robots) {
     let position;
     switch (direction) {
-        case "west":
+        case 0:
             position = {x: robot.x - 1, y: robot.y};
             break;
-        case "north":
+        case 1:
             position = {x: robot.x, y: robot.y - 1};
             break;
-        case "east":
+        case 2:
             position = {x: robot.x + 1, y: robot.y};
             break;
-        case "south":
+        case 3:
             position = {x: robot.x, y: robot.y + 1};
             break;
     }

@@ -1,7 +1,6 @@
 import "../style.scss";
 import React from "react";
 import ReactDOM from "react-dom";
-import {solve} from "./solver";
 
 class Board extends React.Component {
     constructor() {
@@ -159,13 +158,14 @@ class Solver extends React.Component {
     constructor() {
         super();
         this.state = {
+            solving: true,
             solution: null,
             selectedIndex: 0,
         };
     }
 
     componentWillMount() {
-        this.onSolveClick();
+        this.startSolve();
     }
 
     render() {
@@ -187,8 +187,11 @@ class Solver extends React.Component {
         return (
             <div className='solver'>
                 {solutionSteps}
+                {this.state.solving !== false ? <div className='solution-progress'>Solving (Move {this.state.solving})...</div> : null}
+                {this.state.solution === null && this.state.solving === false ?
+                    <div className='no-solution'>No solution</div> : null}
                 <input type='button' value='Solve' className='solve-button'
-                       onClick={() => this.onSolveClick()}>
+                       onClick={() => this.startSolve()}>
                 </input>
             </div>
         );
@@ -201,20 +204,66 @@ class Solver extends React.Component {
         this.props.setSolutionStep(this.state.solution[i]);
     }
 
-    onSolveClick() {
-        const solution = solve(this.props.spaces,
-            [{x: 13, y: 8, color: "green"}, {x: 12, y: 5, color: "red"}],
-            [{x: 9, y: 2, color: "green"}]);
-        this.setState({
-            solution: solution,
-            selectedIndex: 0,
+    startSolve() {
+        const worker = new Worker("./solver-worker.js");
+
+        worker.postMessage({
+            robots: [
+                {x: 13, y: 8, color: "green"},
+                {x: 12, y: 5, color: "red"},
+                {x: 11, y: 5, color: "blue"}
+            ],
+            destinations: [
+                {x: 4, y: 14, color: "green"}
+            ],
         });
-        this.props.setSolutionStep(solution[0]);
+
+        this.props.setSolutionStep(null);
+        this.setState({
+            solution: null,
+            solving: 0,
+        });
+
+        worker.onmessage = event => {
+            if (event.data !== null) {
+                if (event.data.move) {
+                    this.setState({solving: event.data.move});
+                    return;
+                }
+            }
+
+            const solution = event.data;
+            this.setState({
+                solution: solution,
+                selectedIndex: 0,
+                solving: false,
+            });
+            if (solution === null) {
+                this.props.setSolutionStep(null);
+            } else {
+                this.props.setSolutionStep(solution[0]);
+            }
+        };
     }
 }
 
 class SolutionStep extends React.Component {
     render() {
+        let direction;
+        switch (this.props.step.direction) {
+            case 0:
+                direction = 'West';
+                break;
+            case 1:
+                direction = 'North';
+                break;
+            case 2:
+                direction = 'East';
+                break;
+            case 3:
+                direction = 'South';
+                break;
+        }
         return (
             <div className={`solution-step` + (this.props.selected ? ' selected' : '')}
                  onClick={() => this.props.onSelection()}>

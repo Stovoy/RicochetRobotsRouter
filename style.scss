@@ -1,6 +1,7 @@
 body {
   background-color: rgb(18, 20, 21);
 }
+
 .board {
   margin: 0 auto;
   text-align: center;
@@ -174,7 +175,7 @@ body {
 }
 
 .solve-button {
-
+  margin-top: 10px;
 }
 
 .solution {
@@ -187,4 +188,12 @@ body {
 
 .solution-step.selected {
   background-color: lightblue;
+}
+
+.solution-progress {
+  color: white;
+}
+
+.no-solution {
+  color: red;
 }
